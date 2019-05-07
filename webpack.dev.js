@@ -4,11 +4,6 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
     devtool: 'inline-source-map',
-    plugins: [
-        new webpack.DefinePlugin({
-            "process.env": require('./config/dev.env.js')
-        })
-    ],
     devServer: {
         // contentBase: path.join(__dirname, "dist"),
         contentBase: './dist',
