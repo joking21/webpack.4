@@ -9,6 +9,14 @@ module.exports = merge(common, {
     devtool: 'source-map',
     plugins: [
         new CleanWebpackPlugin(['dist']),
+        new webpack.DefinePlugin({
+            "process.env": require('./config/prod.env.js')
+        }),
+        // new webpack.SourceMapDevToolPlugin({
+        //     filename: '/js/[name].js.map',
+        //     // exclude: ['vendor.js']
+        // })
+        
     ],
     optimization: {
         minimizer: [

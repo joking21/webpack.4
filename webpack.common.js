@@ -7,7 +7,18 @@ module.exports = {
     entry: './src/main.js',//值可以是字符串、数组或对象
     output: {
         path: path.resolve(__dirname, './dist'),//Webpack结果存储
-        filename: '[name].[hash:8].js'
+        filename: '[name].[hash:8].js',
+        publicPath: '/',   // 增加这个的原因是：之前vue动态路由参数，跳转之后，刷新页面，页面静态资源找不到
+    },
+    resolve: {
+        alias: {
+            assets: path.resolve(__dirname, './src/assets'),
+            components: path.resolve(__dirname, './src/components'),
+            common: path.resolve(__dirname, './src/common'),
+            store: path.resolve(__dirname, './src/store'),
+            css: path.resolve(__dirname, './src/css'),
+            views: path.resolve(__dirname, './src/views'),
+        }
     },
     module: {
         rules: [
@@ -21,48 +32,37 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]?[hash]',
-                    outputPath: 'assets/'
-                }
+                test: /\.(png)|(jpg)|(gif)|(woff)|(svg)|(eot)|(ttf)|(woff2)/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        limit: 10000,
+                        outputPath: '/assets',
+                        // publicPath: '/assets',
+                    },
+                }],
             },
             {
                 test: /\.css$/,
                 use: [
-                    // MiniCssExtractPlugin.loader,
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                          // you can specify a publicPath here
-                          // by default it use publicPath in webpackOptions.output
-                          outputPath: 'styles/'
-                        }
-                      },
+                    "style-loader",
+                    MiniCssExtractPlugin.loader,
                     "css-loader"
                 ]
             },
             {
                 test: /\.less$/,
-                // loaders: ['style-loader', 'css-loader', 'less-loader']
                 use: [
-                    // MiniCssExtractPlugin.loader,
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                          // you can specify a publicPath here
-                          // by default it use publicPath in webpackOptions.output
-                          outputPath: 'styles/'
-                        }
-                      },
-                    'css-loader', 'less-loader'
+                    "style-loader",
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'less-loader'
                 ]
             },
-            {
-                test: /\.(jpe?g|png|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
-                loader: 'url-loader?limit=100000'
-            }
+            // {
+            //     test: /\.(jpe?g|png|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+            //     loader: 'url-loader?limit=100000'
+            // }
         ]
     },
     resolve: {
@@ -79,26 +79,26 @@ module.exports = {
         }),
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
-            filename: "[name].[chunkhash:8].css",
-            chunkFilename: "[id].css"
+            filename: "css/[name].[chunkhash:8].css",
+            // chunkFilename: "[id].css"
         }),
     ],
     optimization: {
         splitChunks: {
             cacheGroups: {
-              commons: {
-                name: 'commons',
-                priority: 10,
-                chunks: 'initial'
-              },
-              styles: {
-                name: 'styles',
-                test: /\.css$/,
-                chunks: 'all',
-                minChunks: 2,
-                enforce: true
-              }
+                commons: {
+                    name: 'commons',
+                    priority: 10,
+                    chunks: 'initial'
+                },
+                styles: {
+                    name: 'styles',
+                    test: /\.css$/,
+                    chunks: 'all',
+                    minChunks: 2,
+                    enforce: true
+                }
             }
-          }
+        }
     },
 }
