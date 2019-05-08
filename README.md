@@ -7,4 +7,10 @@
 const prefix = process.env.NODE_ENV === "development" ? '/dw' : '/api';
 ```
 
+关于webpack4搭配，vue和react的路由坑
+```javascript
+historyApiFallback: true 
+```
+webpack4需要在devServer里面加这句，否则vue和react的路由，只有/#/这种hash模式的跳转之后，才能刷新，/tt,这种路由跳转刷新会报404
+
 
