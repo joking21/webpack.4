@@ -7,7 +7,7 @@ module.exports = {
     entry: './src/main.js',//值可以是字符串、数组或对象
     output: {
         path: path.resolve(__dirname, './dist'),//Webpack结果存储
-        filename: '[name].[hash:8].js',
+        filename: 'js/[name].[hash:8].js',
         publicPath: '/',   // 增加这个的原因是：之前vue动态路由参数，跳转之后，刷新页面，页面静态资源找不到
     },
     resolve: {
@@ -32,13 +32,23 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.(png)|(jpg)|(gif)|(woff)|(svg)|(eot)|(ttf)|(woff2)/,
+                test: /\.(woff)|(eot)|(ttf)|(woff2)/,
                 use: [{
-                    loader: 'file-loader',
+                    loader: 'url-loader',
                     options: {
-                        limit: 10000,
-                        outputPath: 'assets',
+                        limit: 50,
+                        outputPath: 'fonts',
                         // publicPath: '/assets',
+                    },
+                }],
+            },
+            {
+                test: /\.(png)|(jpg)|(gif)|(svg)|(jpeg)/,
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 50,
+                        outputPath: 'img',
                     },
                 }],
             },
